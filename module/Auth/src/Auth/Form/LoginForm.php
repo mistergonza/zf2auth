@@ -8,7 +8,7 @@ namespace Auth\Form;
 
 use Zend\Form\Form;
 
-class Login extends Form
+class LoginForm extends Form
 {
    public function __construct($name = null)
     {

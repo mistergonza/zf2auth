@@ -12,6 +12,13 @@ class AuthController extends AbstractActionController
 {
     public function loginAction()
     {
-        return new ViewModel();
+        $form = new \Auth\Form\LoginForm();
+        return new ViewModel(array(
+            'login_form' => $form
+        ));
+    }
+    public function logoutAction()
+    {
+        
     }
 }

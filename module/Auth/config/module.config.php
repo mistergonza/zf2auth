@@ -1,8 +1,27 @@
 <?php
-
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+return array(
+    'router' => array(
+        'routes' => array(
+            'auth' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/auth/[:action/]',
+                    'defaults' => array(
+                        'controller' => 'Auth\Controller\Auth',
+                        'action'     => 'login',
+                    ),
+                ),
+            ),
+        ),
+    ),
+    'controllers' => array(
+        'invokables' => array(
+            'Auth\Controller\Auth' => 'Auth\Controller\AuthController'
+        ),
+    ),
+    'view_manager' => array(
+        'template_path_stack' => array(
+            __DIR__ . '/../view',
+        ),
+    ),
+);
