@@ -12,8 +12,12 @@ class AuthController extends AbstractActionController
 {
     public function loginAction()
     {
-        $request = $this->request;
         $form = new \Auth\Form\LoginForm();
+        $request = $this->request;
+        if($request->isPost())
+        {
+            $form->setData($request->getPost());
+        }
         return new ViewModel(array(
             'login_form' => $form
         ));

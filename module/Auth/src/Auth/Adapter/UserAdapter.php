@@ -1,6 +1,6 @@
 <?php
 /**
- * @author a.ludvikov <gonza.work@gmail.com>
+ * @author mistergonza <gonza.work@gmail.com>
  */
 namespace Auth\Model;
 
@@ -9,11 +9,13 @@ Zend\Authentication\AuthenticationService,
 Zend\Authentication\Storage\Session as SessionStorage,
 Zend\Authentication\Adapter\DbTable as AuthAdapter;
 
-class UserModel
+class UserAdapter
 {
     private $authAdapter;
     private $authService;
-    function __construct($db_adapter)
+    private $storage;
+    
+    public function __construct($db_adapter)
     {
         $this->authAdapter = new AuthAdapter($db_adapter);
         $this->authAdapter
@@ -21,7 +23,17 @@ class UserModel
                 ->setIdentityColumn('login')
                 ->setCredentialColumn('password')
                 ->setCredentialTreatment('MD5(?)');
-      
+        
+        $this->authService =  new AuthenticationService();
+        $this->storage = new SessionStorage();
+        
+        
     }
+    
+    public function authenticate()
+    {
+        
+    }
+    
 
 }

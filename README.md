@@ -1,4 +1,4 @@
-ZendSkeletonApplication
+Simple Auth module for Zend Framework 2
 =======================
 
 Introduction
