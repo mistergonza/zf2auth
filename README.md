@@ -33,7 +33,32 @@ File "\module\Auth\config\module.config.php" include block:
     ),
 ```
 This block may include parameters:
-* **table_name**
-* **identity_column**
-* **credential_column**
-* **crypt_method**
+* **table_name** - name of the table with users,
+* **identity_column** - column containing the user's login,
+* **credential_column** - column contains the encrypted password,
+* **crypt_method** - password encryption method ("md5" or "bcrypt")
+
+Examples:
+```php
+    'auth' => array(
+        'table_name' => 'users',
+        'identity_column' => 'user',
+        'credential_column' => 'pwd',
+        'crypt_method' => 'md5'
+    ),
+```
+```php
+    'auth' => array(
+        'crypt_method' => 'bcrypt'
+    ),
+```
+
+Default values (if no parameter is specified):
+```php
+    'auth' => array(
+        'table_name' => 'users',
+        'identity_column' => 'login',
+        'credential_column' => 'password',
+        'crypt_method' => 'md5'
+    ),
+```
