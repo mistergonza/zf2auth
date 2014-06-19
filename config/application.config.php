@@ -4,6 +4,7 @@ return array(
     'modules' => array(
         'Application',
         'Auth',
+        //Modules for debugging
         'ZendDeveloperTools',
         'BjyProfiler',
     ),

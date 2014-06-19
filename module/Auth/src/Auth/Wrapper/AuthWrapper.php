@@ -7,8 +7,10 @@ namespace Auth\Wrapper;
 use 
 Zend\Authentication\AuthenticationService,
 Zend\Authentication\Storage\Session as SessionStorage,
-//Zend\Authentication\Adapter\DbTable as AuthAdapter,
-Auth\Adapter\AuthAdapter;
+Zend\Authentication\Adapter\DbTable as AuthAdapter;
+
+use
+Auth\Adapter\AuthAdapter as BcryptAuthAdapter;
 
 class AuthWrapper
 {
@@ -19,26 +21,96 @@ class AuthWrapper
     
     /**
      * 
-     * @param type $db_adapter
+     * @param \Zend\Db\Adapter\Adapter $db_adapter
+     * @param array $config
      * @param \Zend\Authentication\Storage\StorageInterface $storage
+     * @throws \Exception
+     * @return \Auth\Wrapper\AuthWrapper
      */
-    public function __construct($db_adapter, $storage = null)
+    public function __construct($db_adapter, array $config = array(), $storage = null)
     {
-        $this->authAdapter = new AuthAdapter($db_adapter,
-                           'users',
-                           'login',
-                           'password'/*,
-                           '(?)' */
-                           );
+        $auth_config = array(
+            'table_name' => (isset($config['auth']['table_name'])) ? $config['auth']['table_name'] : 'users',
+            'identity_column' => (isset($config['auth']['identity_column'])) ? $config['auth']['identity_column'] : 'login',
+            'credential_column' => (isset($config['auth']['credential_column'])) ? $config['auth']['credential_column'] : 'password',
+            'crypt_method' => (isset($config['auth']['crypt_method'])) ? $config['auth']['crypt_method'] : 'md5',
+        );
+        
+        switch ($auth_config['crypt_method'])
+        {
+            case 'md5':
+                $auth_adapter = new AuthAdapter($db_adapter,
+                       $auth_config['table_name'],
+                       $auth_config['identity_column'],
+                       $auth_config['credential_column'],
+                       'MD5(?)'
+                       );
+            break;
+
+            case 'bcrypt':
+                $auth_adapter = new BcryptAuthAdapter($db_adapter,
+                       $auth_config['table_name'],
+                       $auth_config['identity_column'],
+                       $auth_config['credential_column']
+                       );
+            break;
+
+            default:
+                throw new \Exception('Invalid crypt method');
+            break;
+        }
+        
         if(!$storage) 
         {
             $storage = new SessionStorage();   
         }
-        $this->authService =  new AuthenticationService();
-        $this->authService->setStorage($storage);
         
+        $this->setAuthAdapter($auth_adapter);
+        
+        $auth_service =  new AuthenticationService();
+        $auth_service->setStorage($storage);
+        
+        $this->setAuthService($auth_service);
+        
+        return $this;
     }
     
+    /**
+     * 
+     * @return \Zend\Authentication\Adapter\AdapterInterface
+     */
+    public function getAuthAdapter()
+    {
+        return $this->authAdapter;
+    }
+
+    /**
+     * 
+     * @return \Zend\Authentication\AuthenticationService
+     */
+    public function getAuthService()
+    {
+        return $this->authService;
+    }
+
+    public function setAuthAdapter(\Zend\Authentication\Adapter\AdapterInterface $auth_adapter)
+    {
+        $this->authAdapter = $auth_adapter;
+        return $this;
+    }
+
+    /**
+     * 
+     * @param \Zend\Authentication\AuthenticationService $auth_service
+     * @return \Auth\Wrapper\AuthWrapper
+     */
+    public function setAuthService(\Zend\Authentication\AuthenticationService $auth_service)
+    {
+        $this->authService = $auth_service;
+        return $this;
+    }
+
+        
     /**
      * 
      * @param \Zend\Http\Request $request
@@ -58,7 +130,7 @@ class AuthWrapper
     {
         if($this->request->isPost())
         {
-            $adapter = $this->authAdapter;
+            $adapter = $this->getAuthAdapter();
             
             $user = $this->request->getPost('login');
             $password = $this->request->getPost('password'); 
@@ -76,11 +148,12 @@ class AuthWrapper
     
     public function hasIdentity()
     {
-        return  $this->authService->hasIdentity();
+        return  $this->getAuthService()->hasIdentity();
     }
     
     public function logout()
     {
-        
+        $this->getAuthService()->clearIdentity();
+        return $this;
     }
 }

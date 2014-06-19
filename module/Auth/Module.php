@@ -42,8 +42,9 @@ class Module
                 'Auth\Wrapper\AuthWrapper' => function ($sm) {
                     
                     $db_adapter =  $sm->get('Zend\Db\Adapter\Adapter');
+                    $config = $this->getConfig();
                     
-                    $wrapper = new Wrapper\AuthWrapper($db_adapter);
+                    $wrapper = new Wrapper\AuthWrapper($db_adapter, $config);
                     
                     return $wrapper;
                 },
