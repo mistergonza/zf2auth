@@ -21,7 +21,7 @@ If you don't want to use modules for debugging, before use composer you must del
     "bjyoungblood / BjyProfiler": "dev-master"
 ```
 
-And delete lines from "application.config.php":
+And delete lines from `"application.config.php"`:
 ```php
     'ZendDeveloperTools',
     'BjyProfiler',
