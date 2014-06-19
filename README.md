@@ -15,8 +15,8 @@ After cloning from repository you should be using composer to install dependenci
 
 If you don't want to use modules for debugging, before use composer you must delete these lines from "composer.json":
 ```json
-         "zendframework / zend-developer-tools": "dev-master", 
-         "bjyoungblood / BjyProfiler": "dev-master"
+         "zendframework / zend-developer-tools": "dev-master",
+         "bjyoungblood / BjyProfiler": "dev-master"
 ```
 
 And delete lines from "application.config.php":
@@ -25,6 +25,11 @@ And delete lines from "application.config.php":
         'BjyProfiler',
 ```
 
-Database configuration
+Configuration
 ------------
+File "\module\Auth\config\module.config.php" include block:
+```php
+    'auth' => array(
+    ),
+```
 
