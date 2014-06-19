@@ -14,11 +14,40 @@ Zend\Crypt\Password\Bcrypt;
 
 class AuthAdapter extends AbstractAdapter implements AdapterInterface
 {
+    
+    /**
+     * Database Connection
+     * 
+     * @var \Zend\Db\Adapter\Adapter
+     */
     protected $zendDb;
+    
+    /**
+     *
+     * @var string
+     */
     protected $tableName;
+    
+    /**
+     *
+     * @var string
+     */
     protected $identityColumn;
+    
+    /**
+     *
+     * @var string
+     */
     protected $credentialColumn;
     
+    /**
+     * 
+     * @param \Zend\Db\Adapter\Adapter $zendDb
+     * @param string $tableName
+     * @param string $identityColumn
+     * @param string $credentialColumn
+     * @return \Auth\Adapter\AuthAdapter
+     */
     public function __construct(
         DbAdapter $zendDb,
         $tableName = null,
@@ -38,41 +67,75 @@ class AuthAdapter extends AbstractAdapter implements AdapterInterface
         if (null !== $credentialColumn) {
             $this->setCredentialColumn($credentialColumn);
         }
+        
+        return $this;
     }
     
+    /**
+     * 
+     * @return string
+     */
     public function getTableName()
     {
         return $this->tableName;
     }
 
+    /**
+     * 
+     * @return string
+     */
     public function getIdentityColumn()
     {
         return $this->identityColumn;
     }
 
+    /**
+     * 
+     * @return string
+     */
     public function getCredentialColumn()
     {
         return $this->credentialColumn;
     }
 
-    public function setTableName($tableName)
+    /**
+     * 
+     * @param string $table_name
+     * @return \Auth\Adapter\AuthAdapter
+     */
+    public function setTableName($table_name)
     {
-        $this->tableName = $tableName;
+        $this->tableName = $table_name;
         return $this;
     }
 
-    public function setIdentityColumn($identityColumn)
+    /**
+     * 
+     * @param string $identity_column
+     * @return \Auth\Adapter\AuthAdapter
+     */
+    public function setIdentityColumn($identity_column)
     {
-        $this->identityColumn = $identityColumn;
+        $this->identityColumn = $identity_column;
         return $this;
     }
 
-    public function setCredentialColumn($credentialColumn)
+    /**
+     * 
+     * @param string $credential_column
+     * @return \Auth\Adapter\AuthAdapter
+     */
+    public function setCredentialColumn($credential_column)
     {
-        $this->credentialColumn = $credentialColumn;
+        $this->credentialColumn = $credential_column;
         return $this;
     }
     
+    /**
+     * 
+     * @return \Zend\Authentication\Result
+     * @throws Exception\RuntimeException
+     */
     public function authenticate()
     {
         $sql = new Sql\Sql($this->zendDb);
@@ -118,6 +181,11 @@ class AuthAdapter extends AbstractAdapter implements AdapterInterface
         return $auth_result;
     }
     
+    /**
+     * 
+     * @param array $result_identities
+     * @return boolean
+     */
     protected function authenticateValidateResultSet(array $result_identities)
     {
         $result_info =  array();
@@ -138,6 +206,11 @@ class AuthAdapter extends AbstractAdapter implements AdapterInterface
         return true;
     }
     
+    /**
+     * 
+     * @param array $identity
+     * @return \Zend\Authentication\Result
+     */
     protected function authenticateValidateResult($identity)
     {
 
@@ -165,6 +238,11 @@ class AuthAdapter extends AbstractAdapter implements AdapterInterface
         }
     }
     
+    /**
+     * 
+     * @param array $result_info
+     * @return \Zend\Authentication\Result
+     */
     protected function authenticateCreateAuthResult(array $result_info)
     {
         return new AuthenticationResult(
