@@ -1,6 +1,6 @@
 <?php
 /**
- * @author a.ludvikov <gonza.work@gmail.com>
+ * @author mistergonza <gonza.work@gmail.com>
  */
 namespace Auth\Controller;
 
@@ -10,18 +10,32 @@ use Zend\Authentication\Adapter\DbTable as AuthAdapter;
 
 class AuthController extends AbstractActionController
 {
+    use \Auth\Wrapper\AuthWrapperTrait;
+    
     public function loginAction()
     {
-        $form = new \Auth\Form\LoginForm();
         $request = $this->request;
-        if($request->isPost())
+        $form = new \Auth\Form\LoginForm();
+        $auth_wrapper = $this->getAuthWrapper();
+
+        $auth_wrapper->setRequest($request);
+
+        if(!$auth_wrapper->authenticate())
         {
             $form->setData($request->getPost());
         }
+        
         return new ViewModel(array(
             'login_form' => $form
         ));
     }
+    
+    public function bcryptAction()
+    {
+        $bcrypt = new \Zend\Crypt\Password\Bcrypt();
+        echo $bcrypt->create('123');
+    }
+    
     public function logoutAction()
     {
         

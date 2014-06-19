@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 
+ */
 namespace Auth;
 
 use Zend\Mvc\ModuleRouteListener;
@@ -13,7 +15,42 @@ class Module
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
     }
+    
+    public function getControllerConfig() 
+    {
+        return array(
+            'factories' => array(
+                'Auth\Controller\AuthController' => function ($sm)
+                {
+                    $sl = $sm->getServiceLocator();
 
+                    $auth_wrapper = $sl->get('Auth\Wrapper\AuthWrapper');
+
+                    $controller = new Controller\AuthController();
+                    $controller->setAuthWrapper($auth_wrapper);
+                    
+                    return $controller;
+                }
+            ),
+        );
+    }
+    
+    public function getServiceConfig() 
+    {
+        return array(
+            'factories' => array(
+                'Auth\Wrapper\AuthWrapper' => function ($sm) {
+                    
+                    $db_adapter =  $sm->get('Zend\Db\Adapter\Adapter');
+                    
+                    $wrapper = new Wrapper\AuthWrapper($db_adapter);
+                    
+                    return $wrapper;
+                },
+            ),
+        );
+    }
+    
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';

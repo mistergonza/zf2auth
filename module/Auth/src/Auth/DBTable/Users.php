@@ -19,11 +19,13 @@ class Users extends AbstractTableGateway
 
         $this->initialize();
     }
+    
     public function fetchAll()
     {
         $resultSet = $this->select();
         return $resultSet;
     }
+    
     public function getUser($user)
     {
 
