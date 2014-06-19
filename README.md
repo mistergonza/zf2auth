@@ -13,13 +13,17 @@ After cloning from repository you should be using composer to install dependenci
     php composer.phar self-update
     php composer.phar install
 
-If you don't want to use modules for debugging, before use composer you must delete these lines from "composer.json": 
+If you don't want to use modules for debugging, before use composer you must delete these lines from "composer.json":
+```json
          "zendframework / zend-developer-tools": "dev-master", 
          "bjyoungblood / BjyProfiler": "dev-master"
+```
 
 And delete lines from "application.config.php":
+```php
         'ZendDeveloperTools',
         'BjyProfiler',
+```
 
 Database configuration
 ------------
