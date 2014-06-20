@@ -38,6 +38,9 @@ class AuthController extends AbstractActionController
     
     public function logoutAction()
     {
-        
+        $auth_wrapper = $this->getAuthWrapper();
+        $auth_wrapper->logout();
+
+        $this->redirect()->toRoute('auth');
     }
 }

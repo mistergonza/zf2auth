@@ -14,6 +14,12 @@ return array(
             ),
         ),
     ),
+    'service_manager' => array(
+        'aliases' => array(
+            'AuthWrapper' => 'Auth\Wrapper\AuthWrapper',
+            'ACLWrapper' => 'Auth\Wrapper\ACLWrapper'
+        ),
+    ),
     'controllers' => array(
         'invokables' => array(
             'Auth\Controller\Auth' => 'Auth\Controller\AuthController'

@@ -1,6 +1,6 @@
 <?php
 /**
- * 
+ * @author mistergonza <gonza.work@gmail.com>
  */
 namespace Auth;
 
@@ -48,8 +48,20 @@ class Module
                     
                     return $wrapper;
                 },
+                'Auth\Wrapper\ACLWrapper' => function ($sm) {
+                    $config = $sm->get('config');
+
+                    $wrapper = new Wrapper\ACLWrapper($config);
+
+                    return $wrapper;
+                },
             ),
         );
+    }
+    
+    public function allowAccess()
+    {
+        
     }
     
     public function getConfig()

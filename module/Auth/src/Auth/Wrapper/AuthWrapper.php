@@ -17,6 +17,9 @@ class AuthWrapper
     private $authAdapter;
     private $authService;
     private $storage;
+    /**
+     * @var \Zend\Http\Request
+     */
     private $request;
     
     /**
@@ -110,6 +113,10 @@ class AuthWrapper
         return $this;
     }
 
+    public function getRequest()
+    {
+        return $this->request;
+    }
         
     /**
      * 
@@ -121,7 +128,7 @@ class AuthWrapper
         $this->request = $request;
         return $this;
     }
-    
+
     /**
      * 
      * @return boolean
@@ -153,7 +160,10 @@ class AuthWrapper
     
     public function logout()
     {
-        $this->getAuthService()->clearIdentity();
+        if($this->hasIdentity())
+        {
+            $this->getAuthService()->clearIdentity();
+        }
         return $this;
     }
 }

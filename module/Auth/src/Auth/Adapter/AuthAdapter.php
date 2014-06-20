@@ -134,7 +134,7 @@ class AuthAdapter extends AbstractAdapter implements AdapterInterface
     /**
      * 
      * @return \Zend\Authentication\Result
-     * @throws Exception\RuntimeException
+     * @throws \Exception\RuntimeException
      */
     public function authenticate()
     {
@@ -158,7 +158,7 @@ class AuthAdapter extends AbstractAdapter implements AdapterInterface
         } 
         catch (\Exception $e) 
         {
-            throw new Exception\RuntimeException(
+            throw new \Exception\RuntimeException(
                 'The supplied parameters to DbTable failed to '
                     . 'produce a valid sql statement, please check table and column names '
                     . 'for validity.', 0, $e
