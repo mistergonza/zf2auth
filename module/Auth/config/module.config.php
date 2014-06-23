@@ -22,14 +22,32 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Auth\Controller\Auth' => 'Auth\Controller\AuthController'
+            'Auth\Controller\Auth' => 'Auth\Controller\AuthController',
+            'Auth\Controller\Forbidden' => 'Auth\Controller\ForbiddenController',
         ),
         'aliases' => array(
             'Auth\Controller\Auth' => 'Auth\Controller\AuthController'
         ),
     ),
     'auth' => array(
-        'crypt_method' => 'bcrypt', //md5 or bcrypt
+        'crypt_method' => 'md5', //md5 or bcrypt
+    ),
+    'acl' => array(
+        'roles' => array(
+            'guest' => null,
+            'user' => array('guest'),
+        ),
+        'permissions' => array(
+            'Auth\Controller\Auth' => array(
+                'allow' => array(
+                    'guest' => array('login'),
+                    'user' => null,
+                ),
+                'deny' => array(
+                    'guest' => null,
+                ),
+            ),
+        ),
     ),
     'view_manager' => array(
         'template_path_stack' => array(

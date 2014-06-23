@@ -14,6 +14,8 @@ class Module
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+
+        $eventManager->attach('route', array($this, 'allowAccess'), -100);
     }
     
     public function getControllerConfig() 
@@ -24,7 +26,7 @@ class Module
                 {
                     $sl = $sm->getServiceLocator();
 
-                    $auth_wrapper = $sl->get('Auth\Wrapper\AuthWrapper');
+                    $auth_wrapper = $sl->get('AuthWrapper');
 
                     $controller = new Controller\AuthController();
                     $controller->setAuthWrapper($auth_wrapper);
@@ -59,9 +61,37 @@ class Module
         );
     }
     
-    public function allowAccess()
+    public function allowAccess(MvcEvent $e)
     {
-        
+        $application = $e->getApplication();
+        $routeMatch = $e->getRouteMatch();
+
+        $sm = $application->getServiceManager();
+
+        $auth_wrapper = $sm->get('AuthWrapper');
+        $acl_wrapper = $sm->get('ACLWrapper');
+
+        $role = "guest";
+
+        if($auth_wrapper->hasIdentity())
+        {
+            $user_info = $auth_wrapper->getAuthenticatedUserInfo();
+            $role = $user_info['role'];
+        }
+
+        $controller = $routeMatch->getParam('controller');
+        $action = $routeMatch->getParam('action');
+
+        if (!$acl_wrapper->hasResource($controller))
+        {
+            throw new \Exception('Resource ' . $controller . ' not defined');
+        }
+
+        if (!$acl_wrapper->isAllowed($role, $controller, $action))
+        {
+            $routeMatch->setParam('controller', 'Auth\Controller\Forbidden');
+            $routeMatch->setParam('action', 'index');
+        }
     }
     
     public function getConfig()

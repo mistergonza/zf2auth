@@ -92,6 +92,18 @@ return array(
             __DIR__ . '/../view',
         ),
     ),
+    'acl' => array(
+        'permissions' => array(
+            'Application\Controller\Index' => array(
+                'allow' => array(
+                    'user' => null,
+                ),
+                'deny' => array(
+                    'guest' => null,
+                ),
+            ),
+        ),
+    ),
     // Placeholder for console routes
     'console' => array(
         'router' => array(

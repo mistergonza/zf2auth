@@ -6,7 +6,6 @@ namespace Auth\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Zend\Authentication\Adapter\DbTable as AuthAdapter;
 
 class AuthController extends AbstractActionController
 {
@@ -20,26 +19,27 @@ class AuthController extends AbstractActionController
 
         $auth_wrapper->setRequest($request);
 
-        if(!$auth_wrapper->authenticate())
+        if($auth_wrapper->authenticate())
         {
-            $form->setData($request->getPost());
+            $this->redirect()->toRoute('home');
         }
-        
+
+        $form->setData($request->getPost());
+
         return new ViewModel(array(
             'login_form' => $form
         ));
     }
     
-    public function bcryptAction()
+    public function testAction()
     {
-        $bcrypt = new \Zend\Crypt\Password\Bcrypt();
-        echo $bcrypt->create('123');
+        echo $this->getAuthWrapper()->getIdentity();
     }
     
     public function logoutAction()
     {
         $auth_wrapper = $this->getAuthWrapper();
-        $auth_wrapper->logout();
+        $auth_wrapper->clearIdentity();
 
         $this->redirect()->toRoute('auth');
     }

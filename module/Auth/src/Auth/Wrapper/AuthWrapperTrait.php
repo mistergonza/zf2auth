@@ -9,7 +9,6 @@ trait AuthWrapperTrait
     private $authWrapper;
     
     /**
-     * 
      * @return \Auth\Wrapper\AuthWrapper
      */
     public function getAuthWrapper()
@@ -18,8 +17,8 @@ trait AuthWrapperTrait
     }
     
     /**
-     * 
      * @param \Auth\Wrapper\AuthWrapper $auth_wrapper
+     * @return object
      */
     public function setAuthWrapper(AuthWrapper $auth_wrapper)
     {
